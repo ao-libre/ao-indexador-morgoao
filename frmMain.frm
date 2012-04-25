@@ -2,17 +2,110 @@ VERSION 5.00
 Begin VB.Form frmMain 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Indexador Alkon"
-   ClientHeight    =   9090
+   ClientHeight    =   9690
    ClientLeft      =   150
-   ClientTop       =   840
-   ClientWidth     =   11115
+   ClientTop       =   540
+   ClientWidth     =   11040
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
-   MinButton       =   0   'False
-   ScaleHeight     =   606
+   ScaleHeight     =   646
    ScaleMode       =   3  'Pixel
-   ScaleWidth      =   741
-   StartUpPosition =   3  'Windows Default
+   ScaleWidth      =   736
+   StartUpPosition =   2  'CenterScreen
+   Begin VB.Timer animation 
+      Enabled         =   0   'False
+      Left            =   240
+      Top             =   240
+   End
+   Begin VB.ListBox grhList 
+      Height          =   4935
+      ItemData        =   "frmMain.frx":0000
+      Left            =   120
+      List            =   "frmMain.frx":0002
+      TabIndex        =   1
+      Top             =   120
+      Width           =   2655
+   End
+   Begin VB.Frame AnimationFrame 
+      Caption         =   "Animation"
+      Height          =   735
+      Left            =   120
+      TabIndex        =   17
+      Top             =   8880
+      Width           =   8295
+      Begin VB.TextBox FrameTxt 
+         Height          =   285
+         Left            =   5040
+         TabIndex        =   27
+         Top             =   240
+         Width           =   735
+      End
+      Begin VB.CommandButton NextCmd 
+         Caption         =   ">"
+         Height          =   255
+         Left            =   5880
+         TabIndex        =   30
+         Top             =   240
+         Width           =   255
+      End
+      Begin VB.CommandButton PreviousCmd 
+         Caption         =   "<"
+         Height          =   255
+         Left            =   4680
+         TabIndex        =   29
+         Top             =   240
+         Width           =   255
+      End
+      Begin VB.TextBox FramesTxt 
+         Height          =   285
+         Left            =   2760
+         TabIndex        =   26
+         Top             =   240
+         Width           =   735
+      End
+      Begin VB.TextBox DurationTxt 
+         Height          =   285
+         Left            =   1200
+         TabIndex        =   18
+         Top             =   240
+         Width           =   735
+      End
+      Begin VB.Label FrameLbl 
+         AutoSize        =   -1  'True
+         Height          =   195
+         Left            =   4245
+         TabIndex        =   31
+         Top             =   240
+         Width           =   45
+      End
+      Begin VB.Label Label9 
+         AutoSize        =   -1  'True
+         Caption         =   "Frame:"
+         Height          =   195
+         Left            =   3720
+         TabIndex        =   28
+         Top             =   240
+         Width           =   480
+      End
+      Begin VB.Label Label8 
+         AutoSize        =   -1  'True
+         Caption         =   "Frames:"
+         Height          =   195
+         Left            =   2040
+         TabIndex        =   25
+         Top             =   240
+         Width           =   555
+      End
+      Begin VB.Label Label7 
+         AutoSize        =   -1  'True
+         Caption         =   "Duración:"
+         Height          =   195
+         Left            =   360
+         TabIndex        =   19
+         Top             =   240
+         Width           =   690
+      End
+   End
    Begin VB.Frame grhFrame 
       Caption         =   "Grh"
       Height          =   735
@@ -20,27 +113,11 @@ Begin VB.Form frmMain
       TabIndex        =   11
       Top             =   8160
       Width           =   8295
-      Begin VB.TextBox bmpTxt 
+      Begin VB.TextBox grhXTxt 
          Alignment       =   1  'Right Justify
          Height          =   285
-         Left            =   7440
-         TabIndex        =   21
-         Top             =   240
-         Width           =   735
-      End
-      Begin VB.TextBox grhWidthTxt 
-         Alignment       =   1  'Right Justify
-         Height          =   285
-         Left            =   4200
-         TabIndex        =   19
-         Top             =   240
-         Width           =   735
-      End
-      Begin VB.TextBox grhHeightTxt 
-         Alignment       =   1  'Right Justify
-         Height          =   285
-         Left            =   5640
-         TabIndex        =   18
+         Left            =   720
+         TabIndex        =   12
          Top             =   240
          Width           =   735
       End
@@ -48,17 +125,69 @@ Begin VB.Form frmMain
          Alignment       =   1  'Right Justify
          Height          =   285
          Left            =   2160
-         TabIndex        =   17
+         TabIndex        =   13
          Top             =   240
          Width           =   735
       End
-      Begin VB.TextBox grhXTxt 
+      Begin VB.TextBox grhHeightTxt 
          Alignment       =   1  'Right Justify
          Height          =   285
-         Left            =   720
+         Left            =   5640
+         TabIndex        =   15
+         Top             =   240
+         Width           =   735
+      End
+      Begin VB.TextBox grhWidthTxt 
+         Alignment       =   1  'Right Justify
+         Height          =   285
+         Left            =   4200
+         TabIndex        =   14
+         Top             =   240
+         Width           =   735
+      End
+      Begin VB.TextBox bmpTxt 
+         Alignment       =   1  'Right Justify
+         Height          =   285
+         Left            =   7440
          TabIndex        =   16
          Top             =   240
          Width           =   735
+      End
+      Begin VB.Label Label2 
+         AutoSize        =   -1  'True
+         Caption         =   "X:"
+         Height          =   195
+         Left            =   360
+         TabIndex        =   24
+         Top             =   240
+         Width           =   150
+      End
+      Begin VB.Label Label3 
+         AutoSize        =   -1  'True
+         Caption         =   "Y:"
+         Height          =   195
+         Left            =   1800
+         TabIndex        =   23
+         Top             =   240
+         Width           =   150
+      End
+      Begin VB.Label Label4 
+         AutoSize        =   -1  'True
+         Caption         =   "Alto:"
+         Height          =   195
+         Left            =   5040
+         TabIndex        =   22
+         Top             =   240
+         Width           =   315
+      End
+      Begin VB.Label Label5 
+         AutoSize        =   -1  'True
+         Caption         =   "Ancho:"
+         Height          =   195
+         Left            =   3600
+         TabIndex        =   21
+         Top             =   240
+         Width           =   510
       End
       Begin VB.Label Label6 
          AutoSize        =   -1  'True
@@ -69,42 +198,6 @@ Begin VB.Form frmMain
          Top             =   240
          Width           =   360
       End
-      Begin VB.Label Label5 
-         AutoSize        =   -1  'True
-         Caption         =   "Ancho:"
-         Height          =   195
-         Left            =   3600
-         TabIndex        =   15
-         Top             =   240
-         Width           =   510
-      End
-      Begin VB.Label Label4 
-         AutoSize        =   -1  'True
-         Caption         =   "Alto:"
-         Height          =   195
-         Left            =   5040
-         TabIndex        =   14
-         Top             =   240
-         Width           =   315
-      End
-      Begin VB.Label Label3 
-         AutoSize        =   -1  'True
-         Caption         =   "Y:"
-         Height          =   195
-         Left            =   1800
-         TabIndex        =   13
-         Top             =   240
-         Width           =   150
-      End
-      Begin VB.Label Label2 
-         AutoSize        =   -1  'True
-         Caption         =   "X:"
-         Height          =   195
-         Left            =   360
-         TabIndex        =   12
-         Top             =   240
-         Width           =   150
-      End
    End
    Begin VB.CheckBox grhOnly 
       Caption         =   "Mostrar solamente el Grh"
@@ -114,11 +207,6 @@ Begin VB.Form frmMain
       Top             =   5400
       Value           =   1  'Checked
       Width           =   2415
-   End
-   Begin VB.Timer animation 
-      Enabled         =   0   'False
-      Left            =   240
-      Top             =   240
    End
    Begin VB.Frame Frame1 
       Caption         =   "Zoom"
@@ -179,20 +267,11 @@ Begin VB.Form frmMain
    End
    Begin VB.ListBox fileList 
       Height          =   2205
-      ItemData        =   "frmMain.frx":0000
-      Left            =   120
-      List            =   "frmMain.frx":0002
-      TabIndex        =   2
-      Top             =   5760
-      Width           =   2655
-   End
-   Begin VB.ListBox grhList 
-      Height          =   5130
       ItemData        =   "frmMain.frx":0004
       Left            =   120
       List            =   "frmMain.frx":0006
-      TabIndex        =   1
-      Top             =   120
+      TabIndex        =   2
+      Top             =   5760
       Width           =   2655
    End
    Begin VB.PictureBox previewer 
@@ -209,14 +288,29 @@ Begin VB.Form frmMain
    Begin VB.Menu FileMnu 
       Caption         =   "&File"
       Begin VB.Menu SaveMnu 
-         Caption         =   "&Save"
+         Caption         =   "&Save grhs"
          Shortcut        =   ^S
       End
       Begin VB.Menu SaveOldMnu 
-         Caption         =   "Save in &old format"
+         Caption         =   "Save grhs in &old format"
       End
       Begin VB.Menu SaveNewMnu 
-         Caption         =   "Save in &new format"
+         Caption         =   "Save grhs in &new format"
+      End
+      Begin VB.Menu SaveInAllMnu 
+         Caption         =   "Save grhs in all the files"
+      End
+      Begin VB.Menu SaveHeadsMnu 
+         Caption         =   "Save Heads"
+      End
+      Begin VB.Menu SaveHelmetsMnu 
+         Caption         =   "Save Helmets"
+      End
+      Begin VB.Menu SaveBodiesMnu 
+         Caption         =   "Save Bodies"
+      End
+      Begin VB.Menu SaveFXsMnu 
+         Caption         =   "Save FXs"
       End
    End
    Begin VB.Menu GrhMnu 
@@ -228,6 +322,42 @@ Begin VB.Form frmMain
       Begin VB.Menu RemoveGrhMnu 
          Caption         =   "&Remover Grh"
          Shortcut        =   ^D
+      End
+   End
+   Begin VB.Menu OpenMnu 
+      Caption         =   "&Open"
+      Begin VB.Menu HeadsMnu 
+         Caption         =   "Heads(Cabezas.ind)"
+      End
+      Begin VB.Menu HelmetsMnu 
+         Caption         =   "Helmets(Cascos.ind)"
+      End
+      Begin VB.Menu BodiesMnu 
+         Caption         =   "Bodies(Personajes.ind)"
+      End
+      Begin VB.Menu FXsMnu 
+         Caption         =   "Fxs(Fxs.ind)"
+      End
+      Begin VB.Menu OpenNormalMnu 
+         Caption         =   "Árboles normales(Graficos3.ind)"
+      End
+      Begin VB.Menu OpenTransparentMnu 
+         Caption         =   "Árboles transparentes(Graficos2.ind)"
+      End
+      Begin VB.Menu OpenSmallMnu 
+         Caption         =   "Árboles chicos(Graficos1.ind)"
+      End
+   End
+   Begin VB.Menu UtilidadesMnu 
+      Caption         =   "&Utilidades"
+      Begin VB.Menu AutoIndexarMnu 
+         Caption         =   "&Auto-Indexar"
+      End
+      Begin VB.Menu SearchBMPMnu 
+         Caption         =   "Buscar BMP"
+      End
+      Begin VB.Menu SearchErroresMnu 
+         Caption         =   "Buscar errores"
       End
    End
 End
@@ -284,6 +414,28 @@ Private Enum eSelectionBoxPointEdition
     sbpeEndXStartY
 End Enum
 
+Private Type BITMAPINFOHEADER
+    biSize            As Long
+    biWidth           As Long
+    biHeight          As Long
+    biPlanes          As Integer
+    biBitCount        As Integer
+    biCompression     As Long
+    biSizeImage       As Long
+    biXPelsPerMeter   As Long
+    biYPelsPerMeter   As Long
+    biClrUsed         As Long
+    biClrImportant    As Long
+End Type
+
+Private Type BITMAPFILEHEADER
+    bfType            As Integer
+    bfSize            As Long
+    bfReserved1       As Integer
+    bfReserved2       As Integer
+    bfOhFileBits      As Long
+End Type
+
 ''
 ' The current zoom, 1 == 100%
 Private zoom As Single
@@ -328,7 +480,8 @@ Private ignoreSelectionBoxRender As Boolean
 ' Flag used to ignore update events to grh' data textboxes.
 Private ignoreGrhTextUpdate As Boolean
 
-
+Private FileHeaderBMP As BITMAPFILEHEADER
+Private InfoHeaderBMP As BITMAPINFOHEADER
 
 Private Sub AddGrhMnu_Click()
     Call frmAddGrh.Show(vbModal, Me)
@@ -361,6 +514,149 @@ Private Sub animation_Timer()
             Call RedrawPicture(currentGrh, currentFrame)
         End If
     End If
+End Sub
+
+Private Sub ArmasMnu_Click()
+Const Count As Long = 26
+Dim Inicio As Long
+Dim k As Long
+Dim i As Long
+Dim j As Long
+Dim Cant As Byte
+Dim FileNum As String
+
+FileNum = InputBox("Ingrese el número del gráfico.")
+
+If StrPtr(FileNum) = 0 Then Exit Sub
+If FileNum = 0 Then Exit Sub
+
+For i = 1 To UBound(GrhData)
+    If GrhData(i).NumFrames = 0 Then
+        k = k + 1
+        If k = Count Then
+            Inicio = i - (Count - 2)
+            Exit For
+        End If
+    Else
+        k = 0
+        Inicio = 0
+    End If
+Next i
+
+If Inicio = 0 Then
+    Inicio = UBound(GrhData) + 1
+
+    'Resize array
+    ReDim Preserve GrhData(1 To Inicio + (Count - 1)) As GrhData
+End If
+    
+For k = Inicio To Inicio + (Count - 1)
+    If k - (Inicio - 1) <= 22 Then
+        Cant = 1
+    ElseIf k - (Inicio - 1) <= 24 Then
+        Cant = 6
+    Else
+        Cant = 5
+    End If
+    
+    'Make sure he is not overwritting anything
+    If k <= UBound(GrhData()) Then
+        If GrhData(k).NumFrames > 0 Then
+            If MsgBox("The chosen index is currently in use. Do you want to overwrite it?", vbOKCancel) = vbCancel Then
+                Exit Sub
+            End If
+        End If
+    End If
+    
+    If GrhData(k).NumFrames = 0 Then
+        'Search where to place the grh....
+        For i = 0 To frmMain.grhList.ListCount - 1
+            If Val(frmMain.grhList.List(i)) > k Then
+                Exit For
+            End If
+        Next i
+        
+        'Add it!
+        If Cant > 1 Then
+            Call frmMain.grhList.AddItem(k & " (ANIMACIÓN)", i)
+        Else
+            Call frmMain.grhList.AddItem(k, i)
+        End If
+    Else
+        'Search for the grh index within the grhList
+        For i = 0 To frmMain.grhList.ListCount - 1
+            If Val(frmMain.grhList.List(i)) = k Then
+                If Cant > 1 Then
+                    frmMain.grhList.List(i) = k & " (ANIMACIÓN)"
+                Else
+                    frmMain.grhList.List(i) = k
+                End If
+                
+                Exit For
+            End If
+        Next i
+    End If
+    
+    'Fill in grh data
+    With GrhData(k)
+        .FileNum = FileNum
+        
+        .NumFrames = Cant
+        ReDim .Frames(1 To .NumFrames) As Long
+        
+        If Cant = 1 Then
+            .Speed = 0
+            .Frames(1) = k
+        Else
+            For j = 1 To .NumFrames
+                Select Case k - (Inicio - 1)
+                    Case 23
+                        .Frames(j) = (Inicio - 1) + j
+                    Case 24
+                        .Frames(j) = (Inicio - 1) + 6 + j
+                    Case 25
+                        .Frames(j) = (Inicio - 1) + 12 + j
+                    Case 26
+                        .Frames(j) = (Inicio - 1) + 17 + j
+                End Select
+            Next j
+            
+            .Speed = .NumFrames * 1000 / 18
+        End If
+                
+        .pixelHeight = 45
+        .pixelWidth = 25
+        
+        If k - Inicio < 6 Then
+            .sX = (k - Inicio) * .pixelWidth
+            .sY = 0
+        ElseIf k - Inicio < 12 Then
+            .sX = (k - Inicio - 6) * .pixelWidth
+            .sY = 45
+        ElseIf k - Inicio < 17 Then
+            .sX = (k - Inicio - 12) * .pixelWidth
+            .sY = 90
+        ElseIf k - Inicio < 22 Then
+            .sX = (k - Inicio - 17) * .pixelWidth
+            .sY = 135
+        Else
+            .sX = 0
+            .sY = 0
+        End If
+            
+        .TileHeight = .pixelHeight / Config.TilePixelHeight
+        .TileWidth = .pixelWidth / Config.TilePixelWidth
+    End With
+    
+    'Now select it in the list
+    frmMain.grhList.ListIndex = i
+    DoEvents
+Next k
+
+End Sub
+
+Private Sub AutoIndexarMnu_Click()
+Call frmAutoIndex.Show(vbModeless, Me)
 End Sub
 
 Private Sub bmpTxt_Change()
@@ -408,6 +704,396 @@ Private Sub bmpTxt_Change()
     End If
 End Sub
 
+Private Sub BodiesMnu_Click()
+Call frmPersonajes.Show(vbModeless, Me)
+End Sub
+
+Private Sub Command1_Click()
+Const Count As Long = 12
+Dim Inicio As Long
+Dim k As Long
+
+Dim index As Long
+Dim i As Long
+Dim j As Long
+
+Dim Cant As Byte
+
+Dim file As Integer
+Dim Indexados As Long
+
+Dim Alto As Boolean
+
+For Indexados = 11117 To 11204 Step 2
+    For i = 1 To UBound(GrhData)
+        If GrhData(i).NumFrames = 0 Then
+            k = k + 1
+            If k = Count Then
+                Inicio = i - (Count - 2)
+                Exit For
+            End If
+        Else
+            k = 0
+            Inicio = 0
+        End If
+    Next i
+    
+    If Inicio = 0 Then Inicio = UBound(GrhData) + 2
+    Cant = 1
+    Alto = Not Alto
+    
+    'Make sure he is not overwritting anything
+    If (Inicio - 1) <= UBound(GrhData()) Then
+        If GrhData(Inicio - 1).NumFrames > 0 Then
+            If MsgBox("The chosen index is currently in use. Do you want to overwrite it?", vbOKCancel) = vbCancel Then
+                Exit Sub
+            End If
+        End If
+    Else
+        'Resize array
+        ReDim Preserve GrhData(1 To (Inicio - 1)) As GrhData
+    End If
+    
+    If GrhData(Inicio - 1).NumFrames = 0 Then
+        'Search where to place the grh....
+        For i = 0 To frmMain.grhList.ListCount - 1
+            If Val(frmMain.grhList.List(i)) > (Inicio - 1) Then
+                Exit For
+            End If
+        Next i
+        
+        'Add it!
+        If Cant > 1 Then
+            Call frmMain.grhList.AddItem((Inicio - 1) & " (ANIMACIÓN)", i)
+        Else
+            Call frmMain.grhList.AddItem((Inicio - 1), i)
+        End If
+    Else
+        'Search for the grh index within the grhList
+        For i = 0 To frmMain.grhList.ListCount - 1
+            If Val(frmMain.grhList.List(i)) = (Inicio - 1) Then
+                If Cant > 1 Then
+                    frmMain.grhList.List(i) = (Inicio - 1) & " (ANIMACIÓN)"
+                Else
+                    frmMain.grhList.List(i) = (Inicio - 1)
+                End If
+                
+                Exit For
+            End If
+        Next i
+    End If
+    
+    'Fill in grh data
+    With GrhData(Inicio - 1)
+        .FileNum = Indexados
+        
+        .NumFrames = 1
+        ReDim .Frames(1 To .NumFrames) As Long
+        
+        .Speed = 0
+        .Frames(1) = Inicio - 1
+                
+        .pixelHeight = 32
+        .pixelWidth = 32
+        .sX = 0
+        .sY = 0
+        .TileHeight = .pixelHeight / Config.TilePixelHeight
+        .TileWidth = .pixelWidth / Config.TilePixelWidth
+    End With
+    
+    For k = Inicio To Inicio + (Count - 1)
+        index = k
+        
+        If k - (Inicio - 1) <= 22 Then
+            Cant = 1
+        ElseIf k - (Inicio - 1) <= 24 Then
+            Cant = 6
+        Else
+            Cant = 5
+        End If
+        
+        'Make sure he is not overwritting anything
+        If index <= UBound(GrhData()) Then
+            If GrhData(index).NumFrames > 0 Then
+                If MsgBox("The chosen index is currently in use. Do you want to overwrite it?", vbOKCancel) = vbCancel Then
+                    Exit Sub
+                End If
+            End If
+        Else
+            'Resize array
+            ReDim Preserve GrhData(1 To index) As GrhData
+        End If
+        
+        If GrhData(index).NumFrames = 0 Then
+            'Search where to place the grh....
+            For i = 0 To frmMain.grhList.ListCount - 1
+                If Val(frmMain.grhList.List(i)) > index Then
+                    Exit For
+                End If
+            Next i
+            
+            'Add it!
+            If Cant > 1 Then
+                Call frmMain.grhList.AddItem(index & " (ANIMACIÓN)", i)
+            Else
+                Call frmMain.grhList.AddItem(index, i)
+            End If
+        Else
+            'Search for the grh index within the grhList
+            For i = 0 To frmMain.grhList.ListCount - 1
+                If Val(frmMain.grhList.List(i)) = index Then
+                    If Cant > 1 Then
+                        frmMain.grhList.List(i) = index & " (ANIMACIÓN)"
+                    Else
+                        frmMain.grhList.List(i) = index
+                    End If
+                    
+                    Exit For
+                End If
+            Next i
+        End If
+        
+        'Fill in grh data
+        With GrhData(index)
+            .FileNum = Indexados + 1
+            
+            .NumFrames = Cant
+            ReDim .Frames(1 To .NumFrames) As Long
+            
+            If Cant = 1 Then
+                .Speed = 0
+                .Frames(1) = index
+            Else
+                .Speed = .NumFrames * 1000 / 18
+                ReDim Preserve MisCuerpos(1 To UBound(MisCuerpos) + 1) As tIndiceCuerpo
+                
+                If k - (Inicio - 1) = 23 Then
+                    MisCuerpos(UBound(MisCuerpos)).Body(3) = index
+                    MisCuerpos(UBound(MisCuerpos)).Body(1) = index + 1
+                    MisCuerpos(UBound(MisCuerpos)).Body(4) = index + 2
+                    MisCuerpos(UBound(MisCuerpos)).Body(2) = index + 3
+                End If
+                    
+                For j = 1 To .NumFrames
+                    Select Case k - (Inicio - 1)
+                        Case 23
+                            .Frames(j) = (Inicio - 1) + j
+                        Case 24
+                            .Frames(j) = (Inicio - 1) + 6 + j
+                        Case 25
+                            .Frames(j) = (Inicio - 1) + 12 + j
+                        Case 26
+                            .Frames(j) = (Inicio - 1) + 17 + j
+                    End Select
+                Next j
+                
+                If Alto Then
+                    MisCuerpos(UBound(MisCuerpos)).HeadOffsetY = -38
+                Else
+                    MisCuerpos(UBound(MisCuerpos)).HeadOffsetY = -28
+                End If
+            End If
+                    
+            .pixelHeight = 45
+            .pixelWidth = 25
+            
+            If k - Inicio < 6 Then
+                .sX = (k - Inicio) * .pixelWidth
+                .sY = 0
+            ElseIf k - Inicio < 12 Then
+                .sX = (k - Inicio - 6) * .pixelWidth
+                .sY = 45
+            ElseIf k - Inicio < 17 Then
+                .sX = (k - Inicio - 12) * .pixelWidth
+                .sY = 90
+            ElseIf k - Inicio < 22 Then
+                .sX = (k - Inicio - 17) * .pixelWidth
+                .sY = 135
+            Else
+                .sX = 0
+                .sY = 0
+            End If
+                
+            .TileHeight = .pixelHeight / Config.TilePixelHeight
+            .TileWidth = .pixelWidth / Config.TilePixelWidth
+        End With
+        
+        'Now select it in the list
+        frmMain.grhList.ListIndex = i
+        DoEvents
+    Next k
+Next Indexados
+End Sub
+
+Private Sub Command2_Click()
+Dim i As Long
+Dim j As Long
+
+For i = 1 To UBound(GrhData)
+    With GrhData(i)
+        If .NumFrames > 1 Then
+            For j = 2 To .NumFrames
+                If GrhData(.Frames(j)).pixelHeight <> GrhData(.Frames(1)).pixelHeight Then
+                    Debug.Print "Grh " & i & " con índices bugueados"
+                    Debug.Print "Grh inicial(" & .Frames(1) & ") con alto de " & GrhData(.Frames(1)).pixelHeight
+                    Debug.Print "Frame " & j & "(" & .Frames(j) & ") con alto de " & GrhData(.Frames(j)).pixelHeight
+                    Debug.Print ""
+                ElseIf GrhData(.Frames(j)).pixelWidth <> GrhData(.Frames(1)).pixelWidth Then
+                    Debug.Print "Grh " & i & " con índices bugueados"
+                    Debug.Print "Grh inicial(" & .Frames(1) & ") con ancho de " & GrhData(.Frames(1)).pixelWidth
+                    Debug.Print "Frame " & j & "(" & .Frames(j) & ") con ancho de " & GrhData(.Frames(j)).pixelWidth
+                    Debug.Print ""
+                End If
+            Next j
+        End If
+    End With
+Next i
+End Sub
+
+Private Sub CabezasMnu_Click()
+Const Count As Long = 4
+Dim Inicio As Long
+Dim k As Long
+Dim i As Long
+Dim FileNum As Long
+Dim Raza As Byte
+Dim Genero As Byte
+Dim IniCabezas As Integer
+
+FileNum = Val(InputBox("Ingrese el número del gráfico."))
+
+Raza = Val(InputBox("Ingrese el número de la raza." & vbCrLf & _
+    "1. Humanos" & vbCrLf & _
+    "2. Elfos" & vbCrLf & _
+    "3. Elfos oscuros" & vbCrLf & _
+    "4. Enanos" & vbCrLf & _
+    "5. Gnomos"))
+    
+Genero = Val(InputBox("Ingrese el género." & vbCrLf & _
+    "1. Hombres" & vbCrLf & _
+    "2. Mujeres"))
+    
+If FileNum = 0 Then Exit Sub
+If Raza = 0 Then Exit Sub
+If Genero = 0 Then Exit Sub
+
+Raza = Raza - 1
+Genero = Genero - 1
+
+For i = 1 To UBound(GrhData)
+    If GrhData(i).NumFrames = 0 Then
+        k = k + 1
+        If k = Count Then
+            Inicio = i - (Count - 2)
+            Exit For
+        End If
+    Else
+        k = 0
+        Inicio = 0
+    End If
+Next i
+
+If Inicio = 0 Then
+    Inicio = UBound(GrhData) + 1
+
+    'Resize array
+    ReDim Preserve GrhData(1 To Inicio + (Count - 1)) As GrhData
+End If
+
+For k = Inicio To Inicio + (Count - 1)
+    If GrhData(k).NumFrames = 0 Then
+        'Search where to place the grh....
+        For i = 0 To frmMain.grhList.ListCount - 1
+            If Val(frmMain.grhList.List(i)) > k Then
+                Exit For
+            End If
+        Next i
+        
+        'Add it!
+        Call frmMain.grhList.AddItem(k, i)
+    Else
+        'Search for the grh index within the grhList
+        For i = 0 To frmMain.grhList.ListCount - 1
+            If Val(frmMain.grhList.List(i)) = k Then
+                frmMain.grhList.List(i) = k
+                
+                Exit For
+            End If
+        Next i
+    End If
+    
+    'Fill in grh data
+    With GrhData(k)
+        .FileNum = FileNum
+        
+        .NumFrames = 1
+        ReDim .Frames(1 To 1) As Long
+        
+        .Speed = 0
+        .Frames(1) = k
+                
+        .pixelHeight = 50
+        .pixelWidth = 17
+        
+        .sY = 0
+        
+        .sX = 17 * (k - Inicio)
+            
+        .TileHeight = .pixelHeight / Config.TilePixelHeight
+        .TileWidth = .pixelWidth / Config.TilePixelWidth
+    End With
+    
+    'Now select it in the list
+    frmMain.grhList.ListIndex = i
+    DoEvents
+Next k
+
+IniCabezas = (Raza * 100) + (69 * Genero) + 1
+
+Do While MisCabezas(IniCabezas).Head(1) > 0
+    IniCabezas = IniCabezas + 1
+    
+    If IniCabezas > UBound(MisCabezas) Then
+        ReDim Preserve MisCabezas(1 To IniCabezas) As tIndiceCabeza
+    End If
+Loop
+    
+MisCabezas(IniCabezas).Head(3) = Inicio
+MisCabezas(IniCabezas).Head(2) = Inicio + 1
+MisCabezas(IniCabezas).Head(4) = Inicio + 2
+MisCabezas(IniCabezas).Head(1) = Inicio + 3
+End Sub
+
+Private Sub DurationTxt_Change()
+    'Prevent non numeric characters
+    If Not IsNumeric(DurationTxt.Text) Then
+        DurationTxt.Text = Val(DurationTxt.Text)
+    End If
+    
+    'Prevent overflow
+    If Val(DurationTxt.Text) > &H9FFFA Then
+        DurationTxt.Text = &H9FFFA
+    End If
+    
+    'Prevent negative values
+    If Val(DurationTxt.Text) < 0 Then
+        DurationTxt.Text = 0
+    End If
+    
+    'Update data in memory
+    If currentGrh <> NO_GRH Then
+        If Val(DurationTxt.Text) < 5 Then
+            GrhData(currentGrh).Speed = CSng(DurationTxt.Text) * GrhData(currentGrh).NumFrames * 1000 / 18
+        Else
+            GrhData(currentGrh).Speed = DurationTxt.Text
+        End If
+    End If
+End Sub
+
+Private Sub DurationTxt_LostFocus()
+Call grhList_Click
+End Sub
+
 Private Sub fileList_Click()
     Dim path As String
     
@@ -452,6 +1138,10 @@ Private Sub Form_Load()
     
     'Load Grhs!
     Call LoadGrhData(Config.initPath)
+    Call CargarCabezas(Config.initPath)
+    Call CargarCascos(Config.initPath)
+    Call CargarCuerpos(Config.initPath)
+    Call CargarFxs(Config.initPath)
     
     'Fill the lists
     For i = 1 To UBound(GrhData())
@@ -501,6 +1191,70 @@ Private Sub Form_Load()
     ElseIf fileList.ListCount > 0 Then
         fileList.ListIndex = 0
     End If
+End Sub
+
+Private Sub FramesTxt_Change()
+    'Prevent non numeric characters
+    If Not IsNumeric(FramesTxt.Text) Then
+        FramesTxt.Text = Val(FramesTxt.Text)
+    End If
+    
+    'Prevent overflow
+    If Val(FramesTxt.Text) > &H7FFFFFFF Then
+        FramesTxt.Text = &H7FFFFFFF
+    End If
+End Sub
+
+Private Sub FramesTxt_LostFocus()
+    Dim i As Long
+    
+    'Prevent negative values and animations with one frame
+    If Val(FramesTxt.Text) < 2 Then
+        FramesTxt.Text = "2"
+    End If
+    
+    With GrhData(Val(grhList.Text))
+        ReDim Preserve .Frames(1 To Val(FramesTxt.Text)) As Long
+        
+        If Val(FramesTxt.Text) > .NumFrames Then
+            For i = .NumFrames + 1 To Val(FramesTxt.Text)
+                .Frames(i) = .Frames(.NumFrames)
+            Next i
+        End If
+        
+        .NumFrames = Val(FramesTxt.Text)
+    End With
+    
+    Call grhList_Click
+End Sub
+
+Private Sub FrameTxt_Change()
+    'Prevent non numeric characters
+    If Not IsNumeric(FrameTxt.Text) Then
+        FrameTxt.Text = Val(FrameTxt.Text)
+    End If
+    
+    'Prevent overflow
+    If Val(FrameTxt.Text) >= currentGrh Then
+        If currentGrh > 1 Then
+            FrameTxt.Text = currentGrh - 1
+        Else
+            FrameTxt.Text = currentGrh
+        End If
+    End If
+    
+    'Prevent underrflow
+    If Val(FrameTxt.Text) < 1 Then
+        FrameTxt.Text = "1"
+    End If
+End Sub
+
+Private Sub FrameTxt_LostFocus()
+GrhData(currentGrh).Frames(FrameLbl) = FrameTxt
+End Sub
+
+Private Sub FXsMnu_Click()
+Call frmFxs.Show(vbModeless, Me)
 End Sub
 
 Private Sub grhHeightTxt_Change()
@@ -564,6 +1318,7 @@ Private Sub grhList_Click()
     
     'Enable animations if necessary
     If GrhData(currentGrh).NumFrames > 1 Then
+        animation.Enabled = False
         animation.Interval = Round(GrhData(currentGrh).Speed / GrhData(currentGrh).NumFrames)
         animation.Enabled = True
         
@@ -596,6 +1351,11 @@ Private Sub grhList_Click()
         grhWidthTxt.Text = GrhData(currentGrh).pixelWidth
         grhHeightTxt.Text = GrhData(currentGrh).pixelHeight
     End If
+    
+    DurationTxt.Text = GrhData(currentGrh).Speed
+    FramesTxt.Text = GrhData(currentGrh).NumFrames
+    FrameLbl.Caption = 1
+    FrameTxt.Text = GrhData(currentGrh).Frames(1)
     
     'Set scrollers!
     Call SetScrollers
@@ -743,6 +1503,83 @@ Private Sub grhYTxt_Change()
     
     'Redraw selection area
     Call RenderSelectionBox
+End Sub
+
+Private Sub HeadsMnu_Click()
+Call frmCabezas.Show(vbModeless, Me)
+End Sub
+
+Private Sub HelmetsMnu_Click()
+Call frmCascos.Show(vbModeless, Me)
+End Sub
+
+Private Sub NextCmd_Click()
+If Val(FrameLbl.Caption) = GrhData(currentGrh).NumFrames Then Exit Sub
+FrameLbl.Caption = Val(FrameLbl.Caption) + 1
+FrameTxt = GrhData(currentGrh).Frames(Val(FrameLbl.Caption))
+End Sub
+
+Private Sub OpenNormalMnu_Click()
+Dim i As Long
+
+animation.Enabled = False
+Call grhList.Clear
+
+'Load Grhs!
+Call LoadGrhData(Config.initPath)
+
+'Fill the lists
+For i = 1 To UBound(GrhData())
+    If GrhData(i).NumFrames > 0 Then
+        If GrhData(i).NumFrames = 1 Then
+            Call grhList.AddItem(CStr(i))
+        Else
+            Call grhList.AddItem(CStr(i) & " (ANIMACIÓN)")
+        End If
+    End If
+Next i
+End Sub
+
+Private Sub OpenSmallMnu_Click()
+Dim i As Long
+
+animation.Enabled = False
+Call grhList.Clear
+
+'Load Grhs!
+Call LoadGrhData(Config.initPath, 1)
+
+'Fill the lists
+For i = 1 To UBound(GrhData())
+    If GrhData(i).NumFrames > 0 Then
+        If GrhData(i).NumFrames = 1 Then
+            Call grhList.AddItem(CStr(i))
+        Else
+            Call grhList.AddItem(CStr(i) & " (ANIMACIÓN)")
+        End If
+    End If
+Next i
+End Sub
+
+Private Sub OpenTransparentMnu_Click()
+Dim i As Long
+
+animation.Enabled = False
+Call grhList.Clear
+
+'Load Grhs!
+Call LoadGrhData(Config.initPath, 2)
+
+'Fill the lists
+For i = 1 To UBound(GrhData())
+    If GrhData(i).NumFrames > 0 Then
+        If GrhData(i).NumFrames = 1 Then
+            Call grhList.AddItem(CStr(i))
+        Else
+            Call grhList.AddItem(CStr(i) & " (ANIMACIÓN)")
+        End If
+    End If
+Next i
 End Sub
 
 Private Sub picScrollH_Change()
@@ -921,6 +1758,12 @@ Private Sub previewer_MouseUp(Button As Integer, Shift As Integer, x As Single, 
     End If
 End Sub
 
+Private Sub PreviousCmd_Click()
+If Val(FrameLbl.Caption) = 1 Then Exit Sub
+FrameLbl.Caption = Val(FrameLbl.Caption) - 1
+FrameTxt = GrhData(currentGrh).Frames(Val(FrameLbl.Caption))
+End Sub
+
 Private Sub RemoveGrhMnu_Click()
     Dim i As Long
     
@@ -961,6 +1804,46 @@ Private Sub RemoveGrhMnu_Click()
     End If
 End Sub
 
+Private Sub SaveBodiesMnu_Click()
+    If Not grh.SaveBodies(Config.initPath) Then
+        Call MsgBox("The file could not be saved. This could be caused due to lack of space on disk.")
+    Else
+        Call MsgBox("File succesfully written.")
+    End If
+End Sub
+
+Private Sub SaveFXsMnu_Click()
+    If Not grh.SaveFXs(Config.initPath) Then
+        Call MsgBox("The file could not be saved. This could be caused due to lack of space on disk.")
+    Else
+        Call MsgBox("File succesfully written.")
+    End If
+End Sub
+
+Private Sub SaveHeadsMnu_Click()
+    If Not grh.SaveHeads(Config.initPath) Then
+        Call MsgBox("The file could not be saved. This could be caused due to lack of space on disk.")
+    Else
+        Call MsgBox("File succesfully written.")
+    End If
+End Sub
+
+Private Sub SaveHelmetsMnu_Click()
+    If Not grh.SaveHelmets(Config.initPath) Then
+        Call MsgBox("The file could not be saved. This could be caused due to lack of space on disk.")
+    Else
+        Call MsgBox("File succesfully written.")
+    End If
+End Sub
+
+Private Sub SaveInAllMnu_Click()
+    If Not grh.SaveInAllGraphics(Config.initPath, (grh.fileVersion <> -1)) Then
+        Call MsgBox("The file could not be saved. This could be caused due to lack of space on disk, or you are using grh indexes above 32767, which are only supported in the new file format.")
+    Else
+        Call MsgBox("File succesfully written.")
+    End If
+End Sub
+
 Private Sub SaveMnu_Click()
     'Detect the original file format and save it
     If grh.fileVersion = -1 Then
@@ -994,6 +1877,88 @@ Private Sub SaveOldMnu_Click()
             Call MsgBox("File succesfully written.")
         End If
     End If
+End Sub
+
+Private Sub SearchBMPMnu_Click()
+Dim FileNum As String
+Dim i As Long
+Dim Str As String
+
+FileNum = InputBox("Ingrese el gráfico a buscar.")
+If StrPtr(FileNum) = 0 Then Exit Sub
+
+FileNum = Val(FileNum)
+
+For i = 1 To UBound(GrhData)
+    If GrhData(i).FileNum = CLng(FileNum) Then
+        If Str = vbNullString Then
+            Str = i
+        Else
+            Str = Str & ", " & i
+        End If
+    End If
+Next i
+
+MsgBox "El BMP es utilizado por el/los grh/s:" & vbCrLf & Str & "."
+End Sub
+
+Private Sub SearchErroresMnu_Click()
+Dim i As Long
+Dim j As Long
+Dim hFile As Long
+Dim path As String
+
+hFile = FreeFile
+
+'Load new bitmap
+If Right$(Config.bmpPath, 1) <> "\" Then
+    path = Config.bmpPath & "\"
+Else
+    path = Config.bmpPath
+End If
+            
+For i = 1 To UBound(GrhData)
+    With GrhData(i)
+        If .NumFrames > 0 Then
+            If .NumFrames > 1 Then
+                For j = 2 To .NumFrames
+                    If GrhData(.Frames(j)).pixelHeight <> GrhData(.Frames(1)).pixelHeight Then
+                        Debug.Print "Grh " & i & " con índices bugueados"
+                        Debug.Print "Grh inicial(" & .Frames(1) & ") con alto de " & GrhData(.Frames(1)).pixelHeight
+                        Debug.Print "Frame " & j & "(" & .Frames(j) & ") con alto de " & GrhData(.Frames(j)).pixelHeight
+                        Debug.Print ""
+                    End If
+                    
+                    If GrhData(.Frames(j)).pixelWidth <> GrhData(.Frames(1)).pixelWidth Then
+                        Debug.Print "Grh " & i & " con índices bugueados"
+                        Debug.Print "Grh inicial(" & .Frames(1) & ") con ancho de " & GrhData(.Frames(1)).pixelWidth
+                        Debug.Print "Frame " & j & "(" & .Frames(j) & ") con ancho de " & GrhData(.Frames(j)).pixelWidth
+                        Debug.Print ""
+                    End If
+                Next j
+            Else
+                Open path & .FileNum & ".bmp" For Binary Access Read As hFile
+                    Get hFile, , FileHeaderBMP
+                    Get hFile, , InfoHeaderBMP
+                Close hFile
+                
+                If .pixelHeight > InfoHeaderBMP.biHeight - .sY Then
+                    .pixelHeight = Round(InfoHeaderBMP.biHeight) - .sY
+                    
+                    Debug.Print "Grh " & i & " sobre pasa en el ancho las medidas del BMP."
+                    Debug.Print ""
+                End If
+                
+                If .pixelWidth > InfoHeaderBMP.biWidth - .sX Then
+                    .pixelWidth = Round(InfoHeaderBMP.biWidth) - .sX
+                    
+                    Debug.Print "Grh " & i & " sobre pasa en el alto las medidas del BMP."
+                    Debug.Print ""
+                End If
+            End If
+        End If
+    End With
+Next i
 End Sub
 
 Private Sub ZoomIn_Click()
@@ -1300,9 +2265,12 @@ Private Sub SetGrhControlsEnabled(ByVal enable As Boolean)
         If Not TypeOf frmMain.Controls(i) Is Timer And Not TypeOf frmMain.Controls(i) Is Menu Then
             If frmMain.Controls(i).Container Is grhFrame Then
                 frmMain.Controls(i).Enabled = enable
+            ElseIf frmMain.Controls(i).Container Is AnimationFrame Then
+                frmMain.Controls(i).Enabled = Not enable
             End If
         End If
     Next i
     
     grhFrame.Enabled = enable
+    AnimationFrame.Enabled = Not enable
 End Sub

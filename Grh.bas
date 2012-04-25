@@ -1,9 +1,18 @@
 Attribute VB_Name = "Grh"
 Option Explicit
 
-Private Const GRH_DAT_FILE As String = "Graficos.ind"
+Private GRH_DAT_FILE As String  '= "Graficos.ind"
 Private Const OLD_FORMAT_HEADER As String = "Argentum Online by Noland-Studios."
 Private Const OLD_FORMAT_INIT_FILE As String = "Inicio.con"
+
+Public Const GRAFICOS_DIFERENTES As String = "*9*427*444*641*643*644*647*735*1529*1530*1531*1532*1533*" & _
+                                                "1534*3584*4503*4876*4885*4893*4899*4940*5591*5598*5601*6566*" & _
+                                                "7000*7001*7002*7222*7223*7224*7225*7226*7231*9141*9142*9143*" & _
+                                                "9144*9145*9146*9147*9148*9149*9150*9151*9152*9153*9154*9155*" & _
+                                                "9156*9157*9158*9159*9160*9161*9162*9163*9164*9165*9166*9167*" & _
+                                                "9168*9169*9170*9171*9172*9173*9174*9175*9176*9177*9178*9179*" & _
+                                                "9180*9181*9182*9183*9184*9185*9186*9187*9188*9189*9190*9191*" & _
+                                                "9192*12334*13953*18478*18479*18480*18481*18802*18803*"
 
 Public Type GrhData
     sX As Integer
@@ -21,6 +30,23 @@ Public Type GrhData
     Frames() As Long
     
     Speed As Single
+End Type
+
+'Lista de cabezas
+Public Type tIndiceCabeza
+    Head(1 To 4) As Integer
+End Type
+
+Public Type tIndiceCuerpo
+    Body(1 To 4) As Integer
+    HeadOffsetX As Integer
+    HeadOffsetY As Integer
+End Type
+
+Public Type tIndiceFx
+    Animacion As Integer
+    OffsetX As Integer
+    OffsetY As Integer
 End Type
 
 Private Type tCabecera 'Cabecera de los con
@@ -45,14 +71,18 @@ Public Type tGameIni
 End Type
 
 Public GrhData() As GrhData
+Public MisCabezas() As tIndiceCabeza
+Public MisCascos() As tIndiceCabeza
+Public MisCuerpos() As tIndiceCuerpo
+Public FxData() As tIndiceFx
 
 Public fileVersion As Long
 
-
-Public Function LoadGrhData(ByVal path As String) As Boolean
+Public Function LoadGrhData(ByVal path As String, Optional ByVal IndAUsarse As Byte = 3) As Boolean
 On Error GoTo ErrHandler
     Dim handle As Integer
     Dim MiCabecera As tCabecera
+    Dim i As Long
     
     'Set initial size
     ReDim GrhData(0) As GrhData
@@ -64,10 +94,14 @@ On Error GoTo ErrHandler
     'Make sure path is properly set
     If Right$(path, 1) <> "\" Then path = path & "\"
     
+    GRH_DAT_FILE = "Graficos" & IndAUsarse & ".ind"
+    
     If Not FileExists(path & GRH_DAT_FILE) Then
         MsgBox "The file " & path & GRH_DAT_FILE & " does not exist. A new one will be created with your work."
         Exit Function
     End If
+    
+    frmMain.Caption = "Indexador Alkon (" & GRH_DAT_FILE & ")"
     
     Open path & GRH_DAT_FILE For Binary Access Read Lock Write As handle
     
@@ -211,8 +245,6 @@ On Error GoTo ErrorHandler
         Get handle, , grh
     Loop
     
-    Close handle
-    
     'Trim array
     ReDim Preserve GrhData(1 To max) As GrhData
     
@@ -331,8 +363,6 @@ On Error GoTo ErrorHandler
         End With
     Wend
     
-    Close handle
-    
     LoadGrhDataNew = True
 Exit Function
 
@@ -350,7 +380,7 @@ End Function
 ' @return   True if the file was properly saved, False otherwise (data can't be stored in the old file format, use new one).
 
 Public Function SaveGrhDataOld(ByVal path As String) As Boolean
-    Dim handle
+    Dim handle As Integer
     Dim frame As Long
     Dim i As Long
     Dim tempint As Integer
@@ -434,10 +464,9 @@ End Function
 ' @return   True if the file was properly saved, False otherwise.
 
 Public Function SaveGrhDataNew(ByVal path As String) As Boolean
-    Dim handle
+    Dim handle As Integer
     Dim frame As Long
     Dim i As Long
-    Dim tempint As Integer
     Dim MiCabecera As tCabecera
     
     'Make sure path is properly set
@@ -496,4 +525,291 @@ Public Function SaveGrhDataNew(ByVal path As String) As Boolean
     Close handle
     
     SaveGrhDataNew = True
+End Function
+
+Public Function SaveInAllGraphics(ByVal path As String, Optional ByVal NewFormat As Boolean = True) As Boolean
+Dim i As Long
+Dim j As Long
+Dim TempGrhData() As GrhData
+Dim Temp As String
+
+On Error GoTo ErrHandler
+    TempGrhData = GrhData
+    Temp = GRH_DAT_FILE
+    
+    For j = 1 To 3
+        Call LoadGrhData(Config.initPath, j)
+        
+        ReDim Preserve GrhData(1 To UBound(TempGrhData)) As GrhData
+        
+        For i = 1 To UBound(GrhData)
+            If InStr(1, GRAFICOS_DIFERENTES, "*" & i & "*") = 0 Then
+                GrhData(i) = TempGrhData(i)
+            End If
+        Next i
+        
+        If NewFormat Then
+            Call SaveGrhDataNew(path)
+        Else
+            Call SaveGrhDataOld(path)
+        End If
+    Next j
+    
+    GrhData = TempGrhData
+    GRH_DAT_FILE = Temp
+    frmMain.Caption = "Indexador Alkon (" & GRH_DAT_FILE & ")"
+    
+    SaveInAllGraphics = True
+    Exit Function
+    
+ErrHandler:
+    SaveInAllGraphics = False
+End Function
+
+Public Sub CargarCabezas(ByVal path As String)
+    Dim N As Integer
+    Dim i As Long
+    Dim NumHeads As Integer
+    Dim MiCabecera As tCabecera
+    
+    N = FreeFile()
+    
+    If Right$(path, 1) <> "\" Then path = path & "\"
+    
+    Open path & "Cabezas.ind" For Binary Access Read As #N
+    
+    'cabecera
+    Get #N, , MiCabecera
+    
+    'num de cabezas
+    Get #N, , NumHeads
+    
+    'Resize array
+    ReDim MisCabezas(1 To NumHeads) As tIndiceCabeza
+    
+    For i = 1 To NumHeads
+        Get #N, , MisCabezas(i)
+    Next i
+    
+    Close #N
+End Sub
+
+Public Sub CargarCascos(ByVal path As String)
+    Dim N As Integer
+    Dim i As Long
+    Dim NumCascos As Integer
+    Dim MiCabecera As tCabecera
+    
+    N = FreeFile()
+    
+    If Right$(path, 1) <> "\" Then path = path & "\"
+    
+    Open path & "Cascos.ind" For Binary Access Read As #N
+    
+    'cabecera
+    Get #N, , MiCabecera
+    
+    'num de cabezas
+    Get #N, , NumCascos
+    
+    'Resize array
+    ReDim MisCascos(1 To NumCascos) As tIndiceCabeza
+    
+    For i = 1 To NumCascos
+        Get #N, , MisCascos(i)
+    Next i
+    
+    Close #N
+End Sub
+
+Public Sub CargarCuerpos(ByVal path As String)
+    Dim N As Integer
+    Dim i As Long
+    Dim NumCuerpos As Integer
+    Dim MiCabecera As tCabecera
+    
+    N = FreeFile()
+    
+    If Right$(path, 1) <> "\" Then path = path & "\"
+    
+    Open path & "Personajes.ind" For Binary Access Read As #N
+    
+    'cabecera
+    Get #N, , MiCabecera
+    
+    'num de cabezas
+    Get #N, , NumCuerpos
+    
+    'Resize array
+    ReDim MisCuerpos(1 To NumCuerpos) As tIndiceCuerpo
+    
+    For i = 1 To NumCuerpos
+        Get #N, , MisCuerpos(i)
+    Next i
+    
+    Close #N
+End Sub
+
+Public Sub CargarFxs(ByVal path As String)
+    Dim N As Integer
+    Dim i As Long
+    Dim NumFxs As Integer
+    Dim MiCabecera As tCabecera
+    
+    N = FreeFile()
+    
+    If Right$(path, 1) <> "\" Then path = path & "\"
+    
+    Open path & "Fxs.ind" For Binary Access Read As #N
+    
+    'cabecera
+    Get #N, , MiCabecera
+    
+    'num de cabezas
+    Get #N, , NumFxs
+    
+    'Resize array
+    ReDim FxData(1 To NumFxs) As tIndiceFx
+    
+    For i = 1 To NumFxs
+        Get #N, , FxData(i)
+    Next i
+    
+    Close #N
+End Sub
+
+Public Function SaveHeads(ByVal path As String) As Boolean
+    Dim handle As Integer
+    Dim i As Long
+    Dim MiCabecera As tCabecera
+    
+    'Make sure path is properly set
+    If Right$(path, 1) <> "\" Then path = path & "\"
+    
+    path = path & "Cabezas.ind"
+    
+    
+    handle = FreeFile()
+    
+    If FileExists(path) Then
+        Call Kill(path)
+    End If
+    
+    Open path For Binary Access Write As handle
+    
+    MiCabecera.desc = OLD_FORMAT_HEADER
+    
+    'Write headers
+    Put handle, , MiCabecera
+    Put handle, , CInt(UBound(MisCabezas))
+    
+    For i = 1 To UBound(MisCabezas)
+        Put handle, , MisCabezas(i)
+    Next i
+    
+    Close handle
+    
+    SaveHeads = True
+End Function
+
+Public Function SaveHelmets(ByVal path As String) As Boolean
+    Dim handle As Integer
+    Dim i As Long
+    Dim MiCabecera As tCabecera
+    
+    'Make sure path is properly set
+    If Right$(path, 1) <> "\" Then path = path & "\"
+    
+    path = path & "Cascos.ind"
+    
+    
+    handle = FreeFile()
+    
+    If FileExists(path) Then
+        Call Kill(path)
+    End If
+    
+    Open path For Binary Access Write As handle
+    
+    MiCabecera.desc = OLD_FORMAT_HEADER
+    
+    'Write headers
+    Put handle, , MiCabecera
+    Put handle, , CInt(UBound(MisCascos))
+    
+    For i = 1 To UBound(MisCascos)
+        Put handle, , MisCascos(i)
+    Next i
+    
+    Close handle
+    
+    SaveHelmets = True
+End Function
+
+Public Function SaveBodies(ByVal path As String) As Boolean
+    Dim handle As Integer
+    Dim i As Long
+    Dim MiCabecera As tCabecera
+    
+    'Make sure path is properly set
+    If Right$(path, 1) <> "\" Then path = path & "\"
+    
+    path = path & "Personajes.ind"
+    
+    
+    handle = FreeFile()
+    
+    If FileExists(path) Then
+        Call Kill(path)
+    End If
+    
+    Open path For Binary Access Write As handle
+    
+    MiCabecera.desc = OLD_FORMAT_HEADER
+    
+    'Write headers
+    Put handle, , MiCabecera
+    Put handle, , CInt(UBound(MisCuerpos))
+    
+    For i = 1 To UBound(MisCuerpos)
+        Put handle, , MisCuerpos(i)
+    Next i
+    
+    Close handle
+    
+    SaveBodies = True
+End Function
+
+Public Function SaveFXs(ByVal path As String) As Boolean
+    Dim handle As Integer
+    Dim i As Long
+    Dim MiCabecera As tCabecera
+    
+    'Make sure path is properly set
+    If Right$(path, 1) <> "\" Then path = path & "\"
+    
+    path = path & "Fxs.ind"
+    
+    
+    handle = FreeFile()
+    
+    If FileExists(path) Then
+        Call Kill(path)
+    End If
+    
+    Open path For Binary Access Write As handle
+    
+    MiCabecera.desc = OLD_FORMAT_HEADER
+    
+    'Write headers
+    Put handle, , MiCabecera
+    Put handle, , CInt(UBound(FxData))
+    
+    For i = 1 To UBound(FxData)
+        Put handle, , FxData(i)
+    Next i
+    
+    Close handle
+    
+    SaveFXs = True
 End Function
